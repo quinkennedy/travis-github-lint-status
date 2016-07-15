@@ -1,5 +1,6 @@
 var GitHubAPI = require('github');
 var ESLint = require('eslint');
+var Colors = require('colors');
 
 var report = processFiles('.');
 printReport(report);
@@ -12,19 +13,47 @@ function processFiles(glob){
 }
 
 function printReport(report){
+
+  // for each file that has problems, write out all the problems
+  //   the color/format takes cues from 
+  //   the regular command-line eslint output
   for (var result of report.results){
+
     if (result.errorCount !== 0 ||
         result.warningCount !== 0){
-      console.log(result.filePath);
+
+      console.log(result.filePath.underline);
+
       for (var message of result.messages){
-        var type = (message.severity == 2 ? 'error' : 'warng');
-        console.log(type, 
-                    'line', 
-                    message.line, 
+        var type, typeColor;
+
+        if (message.severity === 2){
+          type = 'error';
+          typeColor = Colors.red;
+        } else {
+          type = 'warng';
+          typeColor = Colors.yellow;
+        }
+
+        console.log('  ',
+                    typeColor(type), 
+                    message.line.gray, 
                     message.message, 
-                    message.ruleId);
+                    message.ruleId.gray);
       }
     }
+  }
+
+  if (report.errorCount !== 0){
+    console.log(Colors.red('%d problems (%d errors, %d warnings)'),
+                report.errorCount + report.warningCount,
+                report.errorCount,
+                report.warningCount);
+  } else if (report.warningCount !== 0){
+    console.log(Colors.yellow('%d warnings'),
+                report.warningCount);
+  } else {
+    console.log('no lint issues!'.green);
   }
 }
 
