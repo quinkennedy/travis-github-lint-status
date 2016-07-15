@@ -1,6 +1,6 @@
 var GitHubAPI = require('github');
 var ESLint = require('eslint');
-var Colors = require('colors');
+var Colors = require('colors/safe');
 
 var report = processFiles('.');
 printReport(report);
@@ -22,7 +22,7 @@ function printReport(report){
     if (result.errorCount !== 0 ||
         result.warningCount !== 0){
 
-      console.log(result.filePath.underline);
+      console.log(Colors.underline(result.filePath));
 
       for (var message of result.messages){
         var type, typeColor;
@@ -36,10 +36,10 @@ function printReport(report){
         }
 
         console.log('  ',
-                    typeColor(type), 
-                    message.line.gray, 
-                    message.message, 
-                    message.ruleId.gray);
+                    typeColor(type),
+                    Colors.gray(message.line),
+                    message.message,
+                    Colors.gray(message.ruleId));
       }
     }
   }
@@ -53,7 +53,7 @@ function printReport(report){
     console.log(Colors.yellow('%d warnings'),
                 report.warningCount);
   } else {
-    console.log('no lint issues!'.green);
+    console.log(Colors.green('no lint issues!'));
   }
 }
 
@@ -85,8 +85,6 @@ function updateStatus(report){
                     ', warnings: ' + report.warningCount;
   var context = 'ci/lint/'+travisEvent;
 
-  console.log('using target_url', target_url);
-
   var details = {
     user,
     repo,
@@ -96,8 +94,6 @@ function updateStatus(report){
     description,
     context
   };
-
-  console.log(details);
 
   // make API call
   github.repos.createStatus(details);
