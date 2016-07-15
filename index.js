@@ -18,7 +18,11 @@ function printReport(report){
       console.log(result.filePath);
       for (var message of result.messages){
         var type = (message.severity == 2 ? 'error' : 'warng');
-        console.log(type, 'line', message.line, message.message, message.ruleId);
+        console.log(type, 
+                    'line', 
+                    message.line, 
+                    message.message, 
+                    message.ruleId);
       }
     }
   }
@@ -26,8 +30,10 @@ function printReport(report){
 
 function updateStatus(report){
 
+  var github = new GitHubAPI();
+
   // authenticate with API
-  GitHubAPI.authenticate({
+  github.authenticate({
     type:  'oauth',
     token: process.env.TRAVIS_GITHUB_LINT_STATUS_TOKEN
   });
@@ -49,9 +55,10 @@ function updateStatus(report){
   var description = 'errors: ' + report.errorCount + 
                     ', warnings: ' + report.warningCount;
   var context = 'ci/lint/'+travisEvent;
-  
-  // make API call
-  GitHubAPI.repos.createStatus({
+
+  console.log('using target_url', target_url);
+
+  var details = {
     user,
     repo,
     sha,
@@ -59,6 +66,11 @@ function updateStatus(report){
     target_url,
     description,
     context
-  });
+  };
+
+  console.log(details);
+
+  // make API call
+  github.repos.createStatus(details);
 }
 
