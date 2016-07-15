@@ -2,3 +2,5 @@ token.txt
 node_modules/
 *.swp
 npm-debug.log
+.tern-project
+.vimrc
