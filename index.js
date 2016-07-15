@@ -16,7 +16,7 @@ function printReport(report){
     if (result.errorCount !== 0 ||
         result.warningCount !== 0){
       console.log(result.filePath);
-      for (var message of result){
+      for (var message of result.messages){
         var type = (message.severity == 2 ? 'error' : 'warng');
         console.log(type, 'line', message.line, message.message, message.ruleId);
       }
