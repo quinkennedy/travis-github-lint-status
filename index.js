@@ -7,6 +7,8 @@ var ESLint = require('eslint');
 // used for colorizing the console output to increase readability
 var Colors = require('colors/safe');
 
+// print out Travis vars for debugging
+printTravisVars();
 // run ESLint on all project files
 var report = processFiles('.');
 // print the results to the console
@@ -150,5 +152,33 @@ function updateStatus(report){
 
   // make API call
   github.repos.createStatus(details);
+}
+
+/**
+ * Utility method for logging Travis-CI environment variables. 
+ *   Mostly for debugging
+ */
+function printTravisVars(){
+  var travisVars = [
+    'TRAVIS_BRANCH', 
+    'TRAVIS_BUILD_DIR', 
+    'TRAVIS_BUILD_ID', 
+    'TRAVIS_BUILD_NUMBER',
+    'TRAVIS_COMMIT',
+    'TRAVIS_COMMIT_RANGE',
+    'TRAVIS_EVENT_TYPE',
+    'TRAVIS_JOB_ID',
+    'TRAVIS_JOB_NUMBER',
+    'TRAVIS_OS_NAME',
+    'TRAVIS_PULL_REQUEST',
+    'TRAVIS_REPO_SLUG',
+    'TRAVIS_TEST_RESULT',
+    'TRAVIS_TAG'
+  ];
+  var travisVals = {};
+  for (var travisVar of travisVars){
+    travisVals[travisVar] = process.env[travisVar];
+  }
+  console.log(travisVals);
 }
 
