@@ -190,7 +190,7 @@ function getCommitTarget(eventType){
       sha = parsed[1];
     }
   } else {
-    console.log(Colors.red("event type \'%s\' not supported"), eventType);
+    console.log(Colors.red('event type \'%s\' not supported'), eventType);
     sha = null;
   }
 
