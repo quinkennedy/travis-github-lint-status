@@ -5,6 +5,8 @@ extends: 'eslint:recommended'
 parserOptions:
   sourceType: module
 rules:
+  no-console:
+    - 0
   indent:
     - 2
     - 2
@@ -29,6 +31,7 @@ rules:
     - 2
   no-use-before-define:
     - 2
+    - functions: false
   require-jsdoc:
     - 2
   valid-jsdoc:
