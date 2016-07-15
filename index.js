@@ -14,6 +14,8 @@ function processFiles(glob){
 
 function printReport(report){
 
+  console.log(Colors.bold('-- begin ESLint report --\n'));
+
   // for each file that has problems, write out all the problems
   //   the color/format takes cues from 
   //   the regular command-line eslint output
@@ -28,10 +30,11 @@ function printReport(report){
         var type, typeColor;
 
         if (message.severity === 2){
-          type = 'error';
+          // pad 'error' string to match 'warning' string length
+          type = 'error  ';
           typeColor = Colors.red;
         } else {
-          type = 'warng';
+          type = 'warning';
           typeColor = Colors.yellow;
         }
 
@@ -41,19 +44,23 @@ function printReport(report){
                     message.message,
                     Colors.gray(message.ruleId));
       }
+
+      // extra line at the end to provide visual separation between files
+      console.log();
     }
   }
 
+  // general report at the end
   if (report.errorCount !== 0){
-    console.log(Colors.red('%d problems (%d errors, %d warnings)'),
+    console.log(Colors.red.bold('%d problems (%d errors, %d warnings)'),
                 report.errorCount + report.warningCount,
                 report.errorCount,
                 report.warningCount);
   } else if (report.warningCount !== 0){
-    console.log(Colors.yellow('%d warnings'),
+    console.log(Colors.yellow.bold('%d warnings'),
                 report.warningCount);
   } else {
-    console.log(Colors.green('no lint issues!'));
+    console.log(Colors.green.bold('no lint issues!'));
   }
 }
 
