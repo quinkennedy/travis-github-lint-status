@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // used for interfacing with the GitHub API
 var GitHubAPI = require('github');
 // the actual Linter
