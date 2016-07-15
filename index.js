@@ -192,32 +192,3 @@ function getCommitTarget(eventType){
 
   return sha;
 }
-
-/**
- * Utility method for logging Travis-CI environment variables. 
- *   Mostly for debugging
- */
-function printTravisVars(){
-  var travisVars = [
-    'TRAVIS_BRANCH', 
-    'TRAVIS_BUILD_DIR', 
-    'TRAVIS_BUILD_ID', 
-    'TRAVIS_BUILD_NUMBER',
-    'TRAVIS_COMMIT',
-    'TRAVIS_COMMIT_RANGE',
-    'TRAVIS_EVENT_TYPE',
-    'TRAVIS_JOB_ID',
-    'TRAVIS_JOB_NUMBER',
-    'TRAVIS_OS_NAME',
-    'TRAVIS_PULL_REQUEST',
-    'TRAVIS_REPO_SLUG',
-    'TRAVIS_TEST_RESULT',
-    'TRAVIS_TAG'
-  ];
-  var travisVals = {};
-  for (var travisVar of travisVars){
-    travisVals[travisVar] = process.env[travisVar];
-  }
-  console.log(travisVals);
-}
-
