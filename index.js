@@ -1,0 +1,1 @@
+var GitHubAPI = require('github');
