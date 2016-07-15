@@ -7,8 +7,6 @@ var ESLint = require('eslint');
 // used for colorizing the console output to increase readability
 var Colors = require('colors/safe');
 
-// print out Travis vars for debugging
-printTravisVars();
 // run ESLint on all project files
 var report = processFiles('.');
 // print the results to the console
@@ -145,8 +143,6 @@ function updateStatus(report){
       description,
       context
     };
-
-    console.log(details);
 
     sendToGitHub(details);
   }
