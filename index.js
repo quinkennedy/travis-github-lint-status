@@ -138,7 +138,8 @@ function updateStatus(report){
   var state = (report.errorCount === 0 ? 'success' : 'failure');
   var description = 'errors: ' + report.errorCount + 
                     ', warnings: ' + report.warningCount;
-  var context = 'ci/lint/'+travisEvent;
+  var type = (travisEvent === 'pull_request' ? 'pr' : travisEvent);
+  var context = 'ci/lint/'+type;
 
   var details = {
     user,
@@ -149,6 +150,8 @@ function updateStatus(report){
     description,
     context
   };
+
+  console.log(details);
 
   // make API call
   github.repos.createStatus(details);
