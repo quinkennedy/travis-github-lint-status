@@ -114,6 +114,50 @@ function printReportFooter(report){
  */
 function updateStatus(report){
 
+  // get travis environment variables
+  var travisSlug = process.env.TRAVIS_REPO_SLUG;
+  var travisJob = process.env.TRAVIS_JOB_ID; 
+  var travisEvent = process.env.TRAVIS_EVENT_TYPE;
+  var sha = getCommitTarget(travisEvent);
+  if (!sha){
+    console.log(Colors.red('not POSTing to GitHub'));
+  } else {
+
+    // parse "slug" into name/repo segments for github module
+    var parsedSlug = travisSlug.split('/');
+    var user = parsedSlug[0];
+    var repo = parsedSlug[1];
+
+    // create other parameters for github module
+    var target_url = 'https://travis-ci.org/'+travisSlug+'/jobs/'+travisJob;
+    var state = (report.errorCount === 0 ? 'success' : 'failure');
+    var description = 'errors: ' + report.errorCount + 
+                      ', warnings: ' + report.warningCount;
+    var type = (travisEvent === 'pull_request' ? 'pr' : travisEvent);
+    var context = 'ci/lint/'+type;
+
+    var details = {
+      user,
+      repo,
+      sha,
+      state,
+      target_url,
+      description,
+      context
+    };
+
+    console.log(details);
+
+    sendToGitHub(details);
+  }
+}
+
+/**
+ * Sends the provided details to GitHub as a Status
+ * @param {object} details 
+ *   see [node-github documentation](https://github.com/mikedeboer/node-github)
+ */
+function sendToGitHub(details){
   var github = new GitHubAPI();
 
   // authenticate with API
@@ -122,39 +166,35 @@ function updateStatus(report){
     token: process.env.TRAVIS_GITHUB_LINT_STATUS_TOKEN
   });
 
-  // get travis environment variables
-  var travisSlug = process.env.TRAVIS_REPO_SLUG;
-  var travisJob = process.env.TRAVIS_JOB_ID; 
-  var travisEvent = process.env.TRAVIS_EVENT_TYPE;
-  var sha = process.env.TRAVIS_COMMIT;
-
-  // parse "slug" into name/repo segments for github module
-  var parsedSlug = travisSlug.split('/');
-  var user = parsedSlug[0];
-  var repo = parsedSlug[1];
-
-  // create other parameters for github module
-  var target_url = 'https://travis-ci.org/'+travisSlug+'/jobs/'+travisJob;
-  var state = (report.errorCount === 0 ? 'success' : 'failure');
-  var description = 'errors: ' + report.errorCount + 
-                    ', warnings: ' + report.warningCount;
-  var type = (travisEvent === 'pull_request' ? 'pr' : travisEvent);
-  var context = 'ci/lint/'+type;
-
-  var details = {
-    user,
-    repo,
-    sha,
-    state,
-    target_url,
-    description,
-    context
-  };
-
-  console.log(details);
-
   // make API call
   github.repos.createStatus(details);
+}
+
+/**
+ * Gets the appropriate commit hash for linking with GitHub
+ * @param {string} eventType indicates how the build was triggered 
+ *   (from TRAVIS_EVENT_TYPE)
+ * @returns {string} the hash for the appropriate GitHub commit to link to.
+ *   null if unknown.
+ */
+function getCommitTarget(eventType){
+  var sha;
+  if (eventType === 'push'){
+    sha = process.env.TRAVIS_COMMIT;
+  } else if (eventType === 'pull_request'){
+    var travisCommitRange = process.env.TRAVIS_COMMIT_RANGE;
+    var parsed = travisCommitRange.split('...');
+    if (parsed.length == 1){
+      sha = travisCommitRange;
+    } else {
+      sha = parsed[1];
+    }
+  } else {
+    console.log(Colors.red('event type \'%s\' not supported'), eventType);
+    sha = null;
+  }
+
+  return sha;
 }
 
 /**
