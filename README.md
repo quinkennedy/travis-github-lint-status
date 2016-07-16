@@ -1,13 +1,21 @@
 This is a GitHub integration powered by Travis-CI
 
-# Why
+[Why](#why)
+[Limitations](#limitations)
+[Setup](#setup)
+[Notes](#notes)
+[In The Wild](#in-the-wild)
+
+## Why
 I wanted to separate Linter results from Test results. 
 I don't believe that continuous integration should fail because 
 of simple linting errors. 
 This module is meant to post Linter results as a separate Status 
 line on a GitHub commit or Pull Request.
 
-# Limitations
+![Example](example.png)
+
+## Limitations
 This module assumes you are working with Travis for CI, 
 GitHub for SCM, and ESLint for linting. 
 Pull requests welcome to extend support.
@@ -15,7 +23,7 @@ Pull requests welcome to extend support.
 When linting, the module acts the same as if you called `eslint .` 
 in your project root.
 
-# Setup
+## Setup
 First you will need to create a [Personal Access Token][0] with 
 the *repo:status* permission. 
 Add your generated token to your repository's Environment Varibles 
@@ -42,7 +50,7 @@ script:
     npm run coverage;
 ```
 
-# Notes
+## Notes
 This module should only be run once per commit or pull-request.
 If your CI is configured to test on multiple platforms or Node versions, 
 you should make sure this module only runs in one particular configuration.
@@ -67,4 +75,12 @@ script:
     npm run coverage;
 ```
 
+## In The Wild
+Feel free to explore the pull requests, commit Statuses, and Travis-CI configs
+of the following projects:
+
+* [Spacebrew][1]
+
+
 [0]: https://github.com/settings/tokens
+[1]: https://github.com/quinkennedy/spacebrew
