@@ -1,10 +1,10 @@
 This is a GitHub integration powered by Travis-CI
 
-[Why](#why)
-[Limitations](#limitations)
-[Setup](#setup)
-[Notes](#notes)
-[In The Wild](#in-the-wild)
+* [Why](#why)
+* [Limitations](#limitations)
+* [Setup](#setup)
+* [Notes](#notes)
+* [In The Wild](#in-the-wild)
 
 ## Why
 I wanted to separate Linter results from Test results. 
@@ -76,8 +76,8 @@ script:
 ```
 
 ## In The Wild
-Feel free to explore the pull requests, commit Statuses, and Travis-CI configs
-of the following projects:
+Feel free to explore the pull request statuses, commit statuses, and
+Travis-CI configs of the following projects:
 
 * [Spacebrew][1]
 
